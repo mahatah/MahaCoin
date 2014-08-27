@@ -1,0 +1,9 @@
+Building Mahacoin
+
+See doc/readme-qt.rst for instructions on building Mahacoin-Qt,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of Mahacoin.
+
+See doc/build-*.txt for instructions on building mahacoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of Mahacoin.
