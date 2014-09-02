@@ -35,7 +35,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0xc76a7ce9074feeaffa05528a65e6adffbb8f41bcd369abec907f9b40262d9924");
+uint256 hashGenesisBlock("0x12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Mahacoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1216,6 +1216,7 @@ bool IsInitialBlockDownload()
 {
     if (pindexBest == NULL || fImporting || fReindex || nBestHeight < Checkpoints::GetTotalBlocksEstimate())
         return true;
+    return false;
     static int64 nLastUpdate;
     static CBlockIndex* pindexLastBest;
     if (pindexBest != pindexLastBest)
@@ -2856,6 +2857,7 @@ bool InitBlockIndex() {
 */
         }
         block.print();
+        printf("WHEEEEE! ON LINE 2860 OF MAIN.CPP");
         assert(hash == hashGenesisBlock);
     }
 
