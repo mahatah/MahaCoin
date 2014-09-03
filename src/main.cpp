@@ -2844,7 +2844,6 @@ bool InitBlockIndex() {
                 ++block.nNonce;
                 if (block.nNonce == 0)
                 {
-                    printf("NONCE WRAPPED, incrementing time\n");
                     ++block.nTime;
                 }
             }
