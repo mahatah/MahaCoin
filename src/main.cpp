@@ -2590,19 +2590,25 @@ CBlockIndex * InsertBlockIndex(uint256 hash)
 bool static LoadBlockIndexDB()
 {
     if (!pblocktree->LoadBlockIndexGuts())
+    {
+        printf("WHEEEEE! RETURNING FALSE! ON 2594 IN MAIN.CPP IN FUNCTION LOADBLOCKINDEXDB!\n");
         return false;
+    }
 
+    printf("WHEEEEE! STARTING BOOST INTERRUPTION_POINT IN MAIN ON 2598 IN FUNCTION LOADBLOCKINDEXDB!\n");
     boost::this_thread::interruption_point();
 
     // Calculate nChainWork
     vector<pair<int, CBlockIndex*> > vSortedByHeight;
     vSortedByHeight.reserve(mapBlockIndex.size());
+    printf("WHEEEEE! STARTING THE FIRST BOOST BOOST_FOREACH IN MAIN ON 2604 IN FUNCTION LOADBLOCKINDEXDB!\n");
     BOOST_FOREACH(const PAIRTYPE(uint256, CBlockIndex*)& item, mapBlockIndex)
     {
         CBlockIndex* pindex = item.second;
         vSortedByHeight.push_back(make_pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
+    printf("WHEEEEE! 2611!\n");
     BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
@@ -2613,26 +2619,31 @@ bool static LoadBlockIndexDB()
     }
 
     // Load block file info
+    printf("WHEEEEE! STARTING BOOST TIME TO LOAD BLOCK INTO FILE ON 2621 IN LOADBLOCKINDEXDB!\n");
     pblocktree->ReadLastBlockFile(nLastBlockFile);
     printf("LoadBlockIndexDB(): last block file = %i\n", nLastBlockFile);
     if (pblocktree->ReadBlockFileInfo(nLastBlockFile, infoLastBlockFile))
         printf("LoadBlockIndexDB(): last block file info: %s\n", infoLastBlockFile.ToString().c_str());
 
     // Load nBestInvalidWork, OK if it doesn't exist
+    printf("WHEEEEE! 2629!\n");
     CBigNum bnBestInvalidWork;
     pblocktree->ReadBestInvalidWork(bnBestInvalidWork);
     nBestInvalidWork = bnBestInvalidWork.getuint256();
 
     // Check whether we need to continue reindexing
+    printf("WHEEEEE! 2635!\n");
     bool fReindexing = false;
     pblocktree->ReadReindexing(fReindexing);
     fReindex |= fReindexing;
 
     // Check whether we have a transaction index
+    printf("WHEEEEE! 2640!\n");
     pblocktree->ReadFlag("txindex", fTxIndex);
     printf("LoadBlockIndexDB(): transaction index %s\n", fTxIndex ? "enabled" : "disabled");
 
     // Load hashBestChain pointer to end of best chain
+    printf("WHEEEEE! 2646!\n");
     pindexBest = pcoinsTip->GetBestBlock();
     if (pindexBest == NULL)
         return true;
@@ -2641,6 +2652,7 @@ bool static LoadBlockIndexDB()
     nBestChainWork = pindexBest->nChainWork;
 
     // set 'next' pointers in best chain
+    printf("WHEEEEE! 2655!\n");
     CBlockIndex *pindex = pindexBest;
     while(pindex != NULL && pindex->pprev != NULL) {
          CBlockIndex *pindexPrev = pindex->pprev;
@@ -2650,7 +2662,7 @@ bool static LoadBlockIndexDB()
     printf("LoadBlockIndexDB(): hashBestChain=%s  height=%d date=%s\n",
         hashBestChain.ToString().c_str(), nBestHeight,
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", pindexBest->GetBlockTime()).c_str());
-
+    printf("WHEEEEE! 2664!\n");
     return true;
 }
 
@@ -2747,7 +2759,7 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xc1;
         pchMessageStart[2] = 0xb7;
         pchMessageStart[3] = 0xdc;
-        hashGenesisBlock = uint256("0xc76a7ce9074feeaffa05528a65e6adffbb8f41bcd369abec907f9b40262d9924");
+        hashGenesisBlock = uint256("0x1b876299020a9ba13a7bb590b0328bf21bb0ecc8aea88e0c1a80f7bbd1e78f3e");
     }
 
     //
@@ -2794,7 +2806,7 @@ bool InitBlockIndex() {
         block.nVersion = 1;
         block.nTime    = 1409005553;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 385799032;
+        block.nNonce   = 386822047;
 
         if (fTestNet)
         {
@@ -2807,7 +2819,8 @@ bool InitBlockIndex() {
         printf("%s\n", hash.ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x7260d57cf7ee2e0c540a408aeba7627e958700d1318feffd2b6888a489540c52"));
+        assert(block.hashMerkleRoot == uint256("0x266f74a302bda5b7d3dfea83ee529000c59c248465e32e4b01b2532996a548a8"));
+        //assert(block.hashMerkleRoot == uint256("0x7260d57cf7ee2e0c540a408aeba7627e958700d1318feffd2b6888a489540c52"));
         
 
         if (true && block.GetHash() != hashGenesisBlock)
@@ -2839,25 +2852,38 @@ bool InitBlockIndex() {
             printf("block.nNonce = %u \n", block.nNonce);
             printf("block.GetHash = %s\n", block.GetHash().ToString().c_str());
         // Start new block file
-/*
+            printf("WHEEEEE! ON LINE 2842 OF MAIN.CPP\n");
             try {
                 unsigned int nBlockSize = ::GetSerializeSize(block, SER_DISK, CLIENT_VERSION);
                 CDiskBlockPos blockPos;
                 CValidationState state;
 
+                printf("WHEEEEE! LETS FIND A BLOCK ON 2848!\n");
                 if (!FindBlockPos(state, blockPos, nBlockSize+8, 0, block.nTime))
+                {
+                    printf("WHEEEEE! ON LINE 2850 OF MAIN.CPP");
                     return error("LoadBlockIndex() : FindBlockPos failed");
+                }
+                printf("WHEEEEE! LETS WRITE TO BLOCK ON 2854\n");
                 if (!block.WriteToDisk(blockPos))
+                {
+                    printf("WHEEEEE! ON LINE 2855 OF MAIN.CPP\n");
                     return error("LoadBlockIndex() : writing genesis block to disk failed");
+                }
+                printf("WHEEEEE! LETS ADD TO BLOCK INDEX ON 2860\n");
                 if (!block.AddToBlockIndex(state, blockPos))
+                {
+                    printf("WHEEEEE! ON LINE 2863 OF MAIN.CPP\n");
                     return error("LoadBlockIndex() : genesis block not accepted");
+                }
             } catch(std::runtime_error &e) {
                 return error("LoadBlockIndex() : failed to initialize block database: %s", e.what());
             }
-*/
+
+            printf("WHEEEEE! THIS IS THE END OF THE IF STATEMENT ON 2870!\n");
         }
+        printf("WHEEEEE! ON LINE 2872 OF MAIN.CPP\n");
         block.print();
-        printf("WHEEEEE! ON LINE 2860 OF MAIN.CPP");
         assert(hash == hashGenesisBlock);
     }
 
@@ -4250,9 +4276,14 @@ public:
 CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 {
     // Create new block
+    printf("WHEEEEE! CREATING NEW BLOCK ON 4278!\n");
     auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());
     if(!pblocktemplate.get())
+    {
+        printf("WHEEEEE! WE'RE GOING TO RETURN NULL ON 4282!\n");
         return NULL;
+    }
+    printf("WHEEEEE! WE'RE NOT GOING TO RETURN NULL ON 4285!\n");
     CBlock *pblock = &pblocktemplate->block; // pointer for convenience
 
     // Create coinbase tx
@@ -4283,6 +4314,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
     nBlockMinSize = std::min(nBlockMaxSize, nBlockMinSize);
 
     // Collect memory pool transactions into the block
+    printf("WHEEEEE! WE'RE GOING TO COLLECT MEMORY ON 4316!\n");
     int64 nFees = 0;
     {
         LOCK2(cs_main, mempool.cs);
@@ -4297,6 +4329,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
         // This vector will be sorted into a priority queue:
         vector<TxPriority> vecPriority;
         vecPriority.reserve(mempool.mapTx.size());
+        printf("WHEEEEE! 4331!\n");
         for (map<uint256, CTransaction>::iterator mi = mempool.mapTx.begin(); mi != mempool.mapTx.end(); ++mi)
         {
             CTransaction& tx = (*mi).second;
@@ -4307,6 +4340,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
             double dPriority = 0;
             int64 nTotalIn = 0;
             bool fMissingInputs = false;
+            printf("WHEEEEE! 4342!\n");
             BOOST_FOREACH(const CTxIn& txin, tx.vin)
             {
                 // Read prev transaction
@@ -4322,21 +4356,25 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
                         fMissingInputs = true;
                         if (porphan)
                             vOrphan.pop_back();
+                        printf("WHEEEEE! 4358!\n");
                         break;
                     }
-
+                    printf("WHEEEEE! 4361!\n");
                     // Has to wait for dependencies
                     if (!porphan)
                     {
                         // Use list for automatic deletion
                         vOrphan.push_back(COrphan(&tx));
                         porphan = &vOrphan.back();
+                        printf("WHEEEEE! 4368!\n");
                     }
+                    printf("WHEEEEE! 4370!\n");
                     mapDependers[txin.prevout.hash].push_back(porphan);
                     porphan->setDependsOn.insert(txin.prevout.hash);
                     nTotalIn += mempool.mapTx[txin.prevout.hash].vout[txin.prevout.n].nValue;
                     continue;
                 }
+                printf("WHEEEEE! 4376!\n");
                 const CCoins &coins = view.GetCoins(txin.prevout.hash);
 
                 int64 nValueIn = coins.vout[txin.prevout.n].nValue;
@@ -4346,6 +4384,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 
                 dPriority += (double)nValueIn * nConf;
             }
+            printf("WHEEEEE! 4386!\n");
             if (fMissingInputs) continue;
 
             // Priority is sum(valuein * age) / txsize
@@ -4463,10 +4502,12 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
         nLastBlockSize = nBlockSize;
         printf("CreateNewBlock(): total size %"PRI64u"\n", nBlockSize);
 
+        printf("WHEEEEE! 4504!\n");
         pblock->vtx[0].vout[0].nValue = GetBlockValue(pindexPrev->nHeight+1, nFees);
         pblocktemplate->vTxFees[0] = -nFees;
 
         // Fill in header
+        printf("WHEEEEE! 4509!\n");
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
         pblock->UpdateTime(pindexPrev);
         pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock);
@@ -4474,15 +4515,18 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
         pblock->vtx[0].vin[0].scriptSig = CScript() << OP_0 << OP_0;
         pblocktemplate->vTxSigOps[0] = pblock->vtx[0].GetLegacySigOpCount();
 
+        printf("WHEEEEE! 4517!\n");
         CBlockIndex indexDummy(*pblock);
         indexDummy.pprev = pindexPrev;
         indexDummy.nHeight = pindexPrev->nHeight + 1;
         CCoinsViewCache viewNew(*pcoinsTip, true);
         CValidationState state;
+        printf("WHEEEEE! 4523!\n");
         if (!pblock->ConnectBlock(state, &indexDummy, viewNew, true))
             throw std::runtime_error("CreateNewBlock() : ConnectBlock failed");
     }
 
+    printf("WHEEEEE! 4528!\n");
     return pblocktemplate.release();
 }
 
