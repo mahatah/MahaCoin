@@ -35,10 +35,8 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-//This matches TESTNET but when we don't do this new servers will continue to attempt calculating a genesishash.
-//For the sake of sanity, we comment out the original genesishash and substitute it with one used in Testnet.
 //uint256 hashGenesisBlock("0x12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe");
-uint256 hashGenesisBlock("0x1b876299020a9ba13a7bb590b0328bf21bb0ecc8aea88e0c1a80f7bbd1e78f3e");
+uint256 hashGenesisBlock("0x3bfa2a0c80d0a0d7d4c20cad152603aec6986faba5259f9ff87b604109e37374");
 
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Mahacoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
@@ -2808,9 +2806,9 @@ bool InitBlockIndex() {
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1409005553;
+        block.nTime    = 1409859459;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 386822047;
+        block.nNonce   = 386854781;
 
         if (fTestNet)
         {
@@ -2824,8 +2822,6 @@ bool InitBlockIndex() {
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
         assert(block.hashMerkleRoot == uint256("0x266f74a302bda5b7d3dfea83ee529000c59c248465e32e4b01b2532996a548a8"));
-        //assert(block.hashMerkleRoot == uint256("0x7260d57cf7ee2e0c540a408aeba7627e958700d1318feffd2b6888a489540c52"));
-        
 
         if (false && block.GetHash() != hashGenesisBlock)
         {
