@@ -1,4 +1,5 @@
 *.user
 *.o
+src/obj/*
 src/mahacoind
 mahacoin-qt
