@@ -2824,6 +2824,34 @@ bool InitBlockIndex() {
         //assert(block.hashMerkleRoot == uint256("0x266f74a302bda5b7d3dfea83ee529000c59c248465e32e4b01b2532996a548a8"));
         assert(block.hashMerkleRoot == uint256("0x7260d57cf7ee2e0c540a408aeba7627e958700d1318feffd2b6888a489540c52"));
 
+        /******BEGIN ORIGINAL CODE - COMPATIBILITY QUESTIONED (SEE NOTE BELOW)*****/
+        block.print();
+        assert(hash == hashGenesisBlock);
+
+        // Start new block file
+        try {
+            unsigned int nBlockSize = ::GetSerializeSize(block, SER_DISK, CLIENT_VERSION);
+            CDiskBlockPos blockPos;
+            CValidationState state;
+            if (!FindBlockPos(state, blockPos, nBlockSize+8, 0, block.nTime))
+                return error("LoadBlockIndex() : FindBlockPos failed");
+            if (!block.WriteToDisk(blockPos))
+                return error("LoadBlockIndex() : writing genesis block to disk failed");
+            if (!block.AddToBlockIndex(state, blockPos))
+                return error("LoadBlockIndex() : genesis block not accepted");
+        } catch(std::runtime_error &e) {
+            return error("LoadBlockIndex() : failed to initialize block database: %s", e.what());
+        }
+    }
+
+    return true;
+    /*****END ORIGINAL CODE - COMPATIBILITY QUESTIONS (SEE NOTE BELOW)
+
+//COMMENTED CODE USED TO GENERATE GENESIS BLOCK
+//BUT MAY NOT BE COMPATIBLE WITH ORIGINAL CODE
+//ABOVE WHICH IS NORMALLY INACTIVE WHEN A
+//GENESIS BLOCK HAS ALREADY BEEN FOUND
+/*
         if (false && block.GetHash() != hashGenesisBlock)
         {
             printf("Searching for genesis block...\n");
@@ -2888,6 +2916,7 @@ bool InitBlockIndex() {
     }
 
     return true;
+    */
 }
 
 
