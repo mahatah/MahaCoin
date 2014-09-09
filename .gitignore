@@ -3,3 +3,6 @@
 src/obj/*
 src/mahacoind
 mahacoin-qt
+release/*
+debug/*
+Makefile*
