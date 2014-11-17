@@ -2761,7 +2761,7 @@ bool LoadBlockIndex()
         pchMessageStart[1] = 0xc1;
         pchMessageStart[2] = 0xb7;
         pchMessageStart[3] = 0xdc;
-        hashGenesisBlock = uint256("0x1b876299020a9ba13a7bb590b0328bf21bb0ecc8aea88e0c1a80f7bbd1e78f3e");
+        hashGenesisBlock = uint256("0xfe4ec67d6532ff417d20c32dd667f6b8aaa9cc07eeeffa98a9e18e80206fa4f4");
     }
 
     //
@@ -2813,7 +2813,7 @@ bool InitBlockIndex() {
         if (fTestNet)
         {
             block.nTime    = 1409005553;
-            block.nNonce   = 386822047;
+            block.nNonce   = 2859315;
         }
 
         //// debug print
@@ -2822,7 +2822,8 @@ bool InitBlockIndex() {
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
         //assert(block.hashMerkleRoot == uint256("0x266f74a302bda5b7d3dfea83ee529000c59c248465e32e4b01b2532996a548a8"));
-        assert(block.hashMerkleRoot == uint256("0x7260d57cf7ee2e0c540a408aeba7627e958700d1318feffd2b6888a489540c52"));
+
+       	assert(block.hashMerkleRoot == uint256("0x7260d57cf7ee2e0c540a408aeba7627e958700d1318feffd2b6888a489540c52"));
 
         /******BEGIN ORIGINAL CODE - COMPATIBILITY QUESTIONED (SEE NOTE BELOW)*****/
         block.print();
@@ -2845,14 +2846,15 @@ bool InitBlockIndex() {
     }
 
     return true;
-    /*****END ORIGINAL CODE - COMPATIBILITY QUESTIONS (SEE NOTE BELOW)
+
+    /*****END ORIGINAL CODE - COMPATIBILITY QUESTIONS (SEE NOTE BELOW)*/
 
 //COMMENTED CODE USED TO GENERATE GENESIS BLOCK
 //BUT MAY NOT BE COMPATIBLE WITH ORIGINAL CODE
 //ABOVE WHICH IS NORMALLY INACTIVE WHEN A
 //GENESIS BLOCK HAS ALREADY BEEN FOUND
 /*
-        if (false && block.GetHash() != hashGenesisBlock)
+        if (true && block.GetHash() != hashGenesisBlock)
         {
             printf("Searching for genesis block...\n");
             // This will figure out a valid hash and Nonce if you're
@@ -2913,10 +2915,13 @@ bool InitBlockIndex() {
         printf("WHEEEEE! ON LINE 2872 OF MAIN.CPP\n");
         block.print();
         assert(hash == hashGenesisBlock);
+	
     }
 
+
     return true;
-    */
+*/
+    
 }
 
 
